@@ -13,3 +13,7 @@ __JL 6.25.2020__
 __JL 6.27.2020__
 
 - Complete initial UML class diagram
+- Create initial application
+- Complete launch activity
+- Partially complete SearchActivity
+- Partially ensure screen, density, and orientation compatibility
