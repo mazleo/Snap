@@ -21,4 +21,10 @@ public class SearchActivity extends AppCompatActivity {
         appLogo = findViewById(R.id.search_activity_logo);
         searchBar = findViewById(R.id.search_activity_search_bar);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 }
