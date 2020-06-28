@@ -3,6 +3,7 @@ package io.github.mazleo.snap.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
@@ -20,6 +21,12 @@ public class SearchActivity extends AppCompatActivity {
 
         appLogo = findViewById(R.id.search_activity_logo);
         searchBar = findViewById(R.id.search_activity_search_bar);
+
+        // Do nothing on search button clicked
+        searchBar.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {}
+        });
     }
 
     @Override
