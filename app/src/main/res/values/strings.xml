@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Snap</string>
+    <string name="app_logo_description">Application logo</string>
+    <string name="search_hint">Search for images</string>
+</resources>
