@@ -14,6 +14,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:transitionName="animated_logo"
             android:contentDescription="@string/app_logo_description"
             android:src="@drawable/logo_circle" />
         <SearchView
@@ -24,6 +25,7 @@
             android:layout_weight="2"
             android:queryHint="@string/search_hint"
             android:queryBackground="@drawable/transparent_background"
+            android:transitionName="animated_search_bar"
             android:elevation="3dp"
             android:iconifiedByDefault="false"
             android:searchIcon="@drawable/image_icon"

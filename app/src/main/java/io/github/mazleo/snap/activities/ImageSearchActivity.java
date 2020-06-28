@@ -30,4 +30,10 @@ public class ImageSearchActivity extends AppCompatActivity {
         searchBar.setQuery(prevIntent.getStringExtra("SEARCH_ACTIVITY_QUERY"), false);
         searchBar.requestFocus();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
 }

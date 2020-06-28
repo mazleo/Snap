@@ -28,6 +28,7 @@
         android:queryHint="@string/search_hint"
         android:queryBackground="@drawable/transparent_background"
         android:elevation="3dp"
+        android:transitionName="animated_search_bar"
         android:iconifiedByDefault="false"
         android:searchIcon="@drawable/image_icon"
         android:background="@drawable/border"

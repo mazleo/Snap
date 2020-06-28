@@ -2,8 +2,10 @@ package io.github.mazleo.snap.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -14,6 +16,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private ImageView appLogo;
     private SearchView searchBar;
+    private AppCompatActivity activity;
     private boolean activitySwitched;
 
     @Override
@@ -23,6 +26,7 @@ public class SearchActivity extends AppCompatActivity {
 
         appLogo = findViewById(R.id.search_activity_logo);
         searchBar = findViewById(R.id.search_activity_search_bar);
+        activity = this;
         activitySwitched = false;
 
         // Do nothing on search button clicked
@@ -41,10 +45,15 @@ public class SearchActivity extends AppCompatActivity {
             // Switch activities on searchview query change
             @Override
             public boolean onQueryTextChange(String s) {
+                // Starting new activity with passed data
                 activitySwitched = true;
                 Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
                 intent.putExtra("SEARCH_ACTIVITY_QUERY", s);
-                startActivity(intent);
+
+                // Transition animations
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity, Pair.create((View) appLogo, "animated_logo"), Pair.create((View) searchBar, "animated_search_bar"));
+                startActivity(intent, options.toBundle());
+
                 return true;
             }
         });
