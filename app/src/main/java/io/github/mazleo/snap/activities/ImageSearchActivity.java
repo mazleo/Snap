@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
 
@@ -29,6 +30,21 @@ public class ImageSearchActivity extends AppCompatActivity {
         Intent prevIntent = getIntent();
         searchBar.setQuery(prevIntent.getStringExtra("SEARCH_ACTIVITY_QUERY"), false);
         searchBar.requestFocus();
+
+        // TODO: Temporarily use submit to search, then make it to query change
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                // TODO: Begin search process
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // TODO: Search process
+                return true;
+            }
+        });
     }
 
     @Override
