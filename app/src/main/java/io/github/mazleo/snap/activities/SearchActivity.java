@@ -2,6 +2,7 @@ package io.github.mazleo.snap.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +27,23 @@ public class SearchActivity extends AppCompatActivity {
         searchBar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
+        });
+
+        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            // Do nothing on query submission
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            // Switch activities on searchview query change
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
+                intent.putExtra("SEARCH_ACTIVITY_QUERY", s);
+                startActivity(intent);
+                return true;
+            }
         });
     }
 
