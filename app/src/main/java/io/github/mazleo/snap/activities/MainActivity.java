@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
         appLogo = findViewById(R.id.launch_activity_logo);
         activity = this;
         activitySwitched = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         new CountDownTimer(1000, 1000) {
             @Override
