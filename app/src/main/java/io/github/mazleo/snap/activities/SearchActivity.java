@@ -14,6 +14,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private ImageView appLogo;
     private SearchView searchBar;
+    private boolean activitySwitched;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class SearchActivity extends AppCompatActivity {
 
         appLogo = findViewById(R.id.search_activity_logo);
         searchBar = findViewById(R.id.search_activity_search_bar);
+        activitySwitched = false;
 
         // Do nothing on search button clicked
         searchBar.setOnSearchClickListener(new View.OnClickListener() {
@@ -39,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
             // Switch activities on searchview query change
             @Override
             public boolean onQueryTextChange(String s) {
+                activitySwitched = true;
                 Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
                 intent.putExtra("SEARCH_ACTIVITY_QUERY", s);
                 startActivity(intent);
@@ -51,5 +54,13 @@ public class SearchActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (activitySwitched) {
+            this.finish();
+        }
     }
 }
