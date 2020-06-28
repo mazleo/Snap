@@ -17,3 +17,16 @@ __JL 6.27.2020__
 - Complete launch activity
 - Partially complete SearchActivity
 - Partially ensure screen, density, and orientation compatibility
+
+__JL 6.28.2020__
+
+- SearchActivity
+    - Fix animated logo bug on back press
+    - Override search button submission to do nothing
+    - Switch to next activity on search query change
+    - Close activity on opening next activity
+- ImageSearchActivity
+    - Implement layout
+    - Get previous search query and populate current one
+    - Implement transition animation to this activity
+    - Add query text listener
