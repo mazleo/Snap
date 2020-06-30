@@ -1,0 +1,31 @@
+package io.github.mazleo.snap.model;
+
+import java.util.List;
+
+public class SearchResult<T> {
+    private final Class<T> clazz;
+    private SearchState searchState;
+    private List<PexelsElement> listPexelsElement;
+
+    public SearchResult(SearchState searchState, List<PexelsElement> listPexelsElement, Class<T> clazz) {
+        this.searchState = searchState;
+        this.listPexelsElement = listPexelsElement;
+        this.clazz = clazz;
+    }
+
+    public SearchState getSearchState() {
+        return searchState;
+    }
+
+    public void setSearchState(SearchState searchState) {
+        this.searchState = searchState;
+    }
+
+    public List<PexelsElement> getListPexelsElement() {
+        return listPexelsElement;
+    }
+
+    public void setListPexelsElement(List<PexelsElement> listPexelsElement) {
+        this.listPexelsElement = listPexelsElement;
+    }
+}
