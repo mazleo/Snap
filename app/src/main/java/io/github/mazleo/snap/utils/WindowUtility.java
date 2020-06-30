@@ -1,4 +1,4 @@
-package io.github.mazleo.snap.util;
+package io.github.mazleo.snap.utils;
 
 import android.app.Activity;
 

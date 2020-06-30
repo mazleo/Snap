@@ -1,4 +1,4 @@
-package io.github.mazleo.snap.util;
+package io.github.mazleo.snap.utils;
 
 public class SearchInfo {
     public static final int RESULTS_PER_PAGE = 30;
