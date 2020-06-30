@@ -16,7 +16,7 @@ public class PexelsImage extends PexelsElement {
         this.photographerName = null;
     }
     public PexelsImage(int id, int width, int height, String imageUrl, int photographerId, String photographerName) {
-        this(id, width, height, imageUrl)
+        this(id, width, height, imageUrl);
         this.photographerId = photographerId;
         this.photographerName = photographerName;
     }
