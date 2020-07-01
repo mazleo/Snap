@@ -30,3 +30,18 @@ __JL 6.28.2020__
     - Get previous search query and populate current one
     - Implement transition animation to this activity
     - Add query text listener
+
+__JL 6.30.2020__
+
+- Create SearchInfo class
+    - Add API key
+- Implement util classes
+- Implement model classes
+    - PexelsElement
+    - PexelsImage
+    - SearchState
+    - SearchResult
+- Add RxAndroid dependency
+- Add Retrofit dependency
+- Create initial network components
+- Add Gson dependency
