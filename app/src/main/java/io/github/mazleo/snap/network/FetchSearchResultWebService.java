@@ -24,7 +24,7 @@ public class FetchSearchResultWebService implements Observer {
     private QueryRepository queryRepository;
     private Activity activity;
     private Disposable searchDisposable;
-//    private FetchImageWebService imageWebService;
+    private FetchImagesWebService imageWebService;
     private int searchType;
 
     public FetchSearchResultWebService(QueryRepository queryRepository, Activity activity, int searchType) {
@@ -65,6 +65,8 @@ public class FetchSearchResultWebService implements Observer {
     @Override
     public void onNext(Object o) {
         SearchResult searchResult = (SearchResult) o;
+        this.imageWebService = new FetchImagesWebService(this.queryRepository, searchResult);
+        this.imageWebService.retrieveImages(this.activity);
     }
     @Override
     public void onSubscribe(@NonNull Disposable d) {
