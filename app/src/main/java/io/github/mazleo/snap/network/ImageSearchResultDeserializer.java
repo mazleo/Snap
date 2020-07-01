@@ -12,7 +12,7 @@ import io.github.mazleo.snap.model.SearchResult;
 
 public class ImageSearchResultDeserializer implements JsonDeserializer<SearchResult> {
     public SearchResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-        Log.i("APPDEBUG", json.toString());
+        // TODO Convert json to searchresult
         return null;
     }
 }

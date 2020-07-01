@@ -1,11 +1,15 @@
 package io.github.mazleo.snap.network;
 
 import io.github.mazleo.snap.model.SearchResult;
+import io.github.mazleo.snap.utils.SearchInfo;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface SearchResultService {
-    @GET("{urlSearchType}/search?page={pageNum}&per_page={resultsPerPage}&query={query}")
-    Observable<SearchResult> fetchSearchResult(@Path("pageNum") int pageNumber, @Path("resultsPerPage") int resultsPerPage, @Path("query") String query, @Path("urlSearchType") String urlSearchType);
+    @Headers("Authorization: " + SearchInfo.PEXELS_API_KEY)
+    @GET("{urlSearchType}/search")
+    Observable<SearchResult> fetchSearchResult(@Path("urlSearchType") String urlSearchType, @Query("page") int pageNumber, @Query("per_page") int resultsPerPage, @Query("query") String query);
 }

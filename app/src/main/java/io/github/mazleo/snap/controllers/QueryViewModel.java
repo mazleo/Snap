@@ -14,9 +14,11 @@ public class QueryViewModel {
     private MutableLiveData<Integer> searchProgress;
 
     public QueryViewModel() {
-        searchResult = null;
+        searchResult = new MutableLiveData<SearchResult>();
+        searchResult.postValue(null);
         queryRepository = null;
-        searchProgress = null;
+        searchProgress = new MutableLiveData<Integer>();
+        searchProgress.postValue(SearchInfo.SEARCH_NO_PROGRESS);
     }
 
     public MutableLiveData<SearchResult> getSearchResultLiveData() {
@@ -39,6 +41,7 @@ public class QueryViewModel {
     }
     public void fetchSearchResult(int pageNumber, int resultsPerPage, int searchType, String query, Activity activity) {
         setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
-        //this.queryRepository = new QueryRepository(this);
+        this.queryRepository = new QueryRepository(this);
+        this.queryRepository.startServiceForSearchResult(pageNumber, resultsPerPage, searchType, query, activity);
     }
 }
