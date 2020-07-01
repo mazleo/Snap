@@ -37,7 +37,7 @@ public class FetchSearchResultWebService implements Observer {
         Observable<SearchResult> searchResultObservable = null;
         Gson gson = new GsonBuilder().registerTypeAdapter(SearchResult.class, new ImageSearchResultDeserializer()).create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.pexels.com")
+                .baseUrl(SearchInfo.PEXELS_SEARCH_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();
@@ -64,8 +64,10 @@ public class FetchSearchResultWebService implements Observer {
     }
     @Override
     public void onNext(Object o) {
+        SearchResult searchResult = (SearchResult) o;
     }
     @Override
     public void onSubscribe(@NonNull Disposable d) {
+        this.searchDisposable = d;
     }
 }

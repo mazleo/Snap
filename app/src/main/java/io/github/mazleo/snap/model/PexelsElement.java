@@ -1,5 +1,7 @@
 package io.github.mazleo.snap.model;
 
+import androidx.annotation.NonNull;
+
 public class PexelsElement {
     private int id;
     private int width;
@@ -33,5 +35,11 @@ public class PexelsElement {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "" + this.id;
     }
 }

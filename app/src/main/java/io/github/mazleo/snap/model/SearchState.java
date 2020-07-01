@@ -1,5 +1,7 @@
 package io.github.mazleo.snap.model;
 
+import androidx.annotation.NonNull;
+
 public class SearchState {
     private int totalResults;
     private int openPages;
@@ -51,5 +53,16 @@ public class SearchState {
 
     public void setSearchType(int searchType) {
         this.searchType = searchType;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return
+                "[total_result: " + this.totalResults
+                + ", open_pages: " + this.openPages
+                + ", results_per_page: " + this.resultsPerPage
+                + ", search_type: " + this.searchType
+                + "]";
     }
 }
