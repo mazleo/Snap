@@ -1,8 +1,6 @@
 package io.github.mazleo.snap.network;
 
 import android.app.Activity;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +22,7 @@ public class FetchSearchResultWebService implements Observer {
     private QueryRepository queryRepository;
     private Activity activity;
     private Disposable searchDisposable;
-    private FetchImagesWebService imageWebService;
+    private FetchThumbnailsWebService thumbnailsWebService;
     private int searchType;
 
     public FetchSearchResultWebService(QueryRepository queryRepository, Activity activity, int searchType) {
@@ -65,8 +63,8 @@ public class FetchSearchResultWebService implements Observer {
     @Override
     public void onNext(Object o) {
         SearchResult searchResult = (SearchResult) o;
-        this.imageWebService = new FetchImagesWebService(this.queryRepository, searchResult);
-        this.imageWebService.retrieveImages(this.activity);
+        this.thumbnailsWebService = new FetchThumbnailsWebService(this.queryRepository, searchResult);
+        this.thumbnailsWebService.retrieveImages(this.activity);
     }
     @Override
     public void onSubscribe(@NonNull Disposable d) {

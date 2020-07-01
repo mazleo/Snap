@@ -27,20 +27,18 @@ import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 
-public class FetchImagesWebService implements Observer {
+public class FetchThumbnailsWebService implements Observer {
     private SearchResult searchResult;
     private int currentPexelElement;
-    private int currentImageType;
     private QueryRepository queryRepository;
-    private Disposable imageDisposable;
+    private Disposable disposable;
 
 
-    public FetchImagesWebService(QueryRepository queryRepository, SearchResult searchResult) {
+    public FetchThumbnailsWebService(QueryRepository queryRepository, SearchResult searchResult) {
         this.queryRepository = queryRepository;
         this.searchResult = searchResult;
         this.currentPexelElement = 0;
-        this.currentImageType = ImageUtility.IMAGE_TYPE_THUMBNAIL;
-        this.imageDisposable = null;
+        this.disposable = null;
     }
 
     public void retrieveImages(Activity activity) {
@@ -53,35 +51,19 @@ public class FetchImagesWebService implements Observer {
         ImageService imageService = retrofit.create(ImageService.class);
 
         List<PexelsElement> pexelsElementList = searchResult.getListPexelsElement();
-        // Download both thumbnail and src image for image search type
-        if (searchResult.getSearchState().getSearchType() == SearchInfo.SEARCH_TYPE_IMAGE) {
-            for (PexelsElement elementItem : pexelsElementList) {
-                PexelsImage imageItem = (PexelsImage) elementItem;
-                int originalWidth = imageItem.getWidth();
-                int originalHeight = imageItem.getHeight();
-                int thumbnailSize = ImageUtility.calcThumbnailImageSize(activity);
-                int srcWidth = ImageUtility.calcSrcImageWidth(activity);
-                int srcHeight = ImageUtility.calcSrcImageHeight(srcWidth, originalWidth, originalHeight);
+        for (PexelsElement elementItem : pexelsElementList) {
+            PexelsImage imageItem = (PexelsImage) elementItem;
+            int thumbnailSize = ImageUtility.calcThumbnailImageSize(activity);
 
-                Observable<ResponseBody> thumbnailObservable = imageService.fetchMediaBytes(
-                        imageItem.getImageUrl(),
-                        thumbnailSize,
-                        thumbnailSize,
-                        "crop"
-                );
-                Observable<ResponseBody> srcObservable = imageService.fetchMediaBytes(
-                        imageItem.getImageUrl(),
-                        Math.min(srcWidth, originalWidth),
-                        Math.min(srcHeight, originalHeight),
-                        "crop"
-                );
+            Observable<ResponseBody> thumbnailObservable = imageService.fetchMediaBytes(
+                    imageItem.getImageUrl(),
+                    thumbnailSize,
+                    thumbnailSize,
+                    "crop"
+            );
 
-                observableList.add(thumbnailObservable);
-                observableList.add(srcObservable);
-            }
+            observableList.add(thumbnailObservable);
         }
-        // Download only thumbnail for video search type
-        // else {}
 
         Observable finalObservable = mergeObservablesInList(observableList);
         finalObservable
@@ -104,7 +86,7 @@ public class FetchImagesWebService implements Observer {
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
-        this.imageDisposable = d;
+        this.disposable = d;
     }
     @Override
     public void onNext(Object o) {
@@ -121,23 +103,8 @@ public class FetchImagesWebService implements Observer {
             e.printStackTrace();
         }
         PexelsImage imageObject = (PexelsImage) this.searchResult.getListPexelsElement().get(this.currentPexelElement);
-        switch (this.searchResult.getSearchState().getSearchType()) {
-            case SearchInfo.SEARCH_TYPE_IMAGE:
-                if (this.currentImageType == ImageUtility.IMAGE_TYPE_THUMBNAIL) {
-                    imageObject.setThumbnailBitmap(bitmap);
-                    this.currentImageType = ImageUtility.IMAGE_TYPE_SRC;
-                }
-                else if (this.currentImageType == ImageUtility.IMAGE_TYPE_SRC) {
-                    imageObject.setSrcBitmap(bitmap);
-                    this.currentImageType = ImageUtility.IMAGE_TYPE_THUMBNAIL;
-                    this.currentPexelElement++;
-                }
-                break;
-            /*
-            case SearchInfo.SEARCH_TYPE_VIDEO:
-                break;
-             */
-        }
+        imageObject.setThumbnailBitmap(bitmap);
+        this.currentPexelElement++;
     }
     @Override
     public void onError(@NonNull Throwable e) {
@@ -145,7 +112,6 @@ public class FetchImagesWebService implements Observer {
     }
     @Override
     public void onComplete() {
-        Log.i("APPDEBUG", this.searchResult.toString());
         returnSearchResult();
     }
 }
