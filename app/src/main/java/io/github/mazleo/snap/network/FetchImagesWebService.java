@@ -14,6 +14,7 @@ import io.github.mazleo.snap.model.PexelsElement;
 import io.github.mazleo.snap.model.PexelsImage;
 import io.github.mazleo.snap.model.SearchResult;
 import io.github.mazleo.snap.utils.DisplayUtility;
+import io.github.mazleo.snap.utils.ImageUtility;
 import io.github.mazleo.snap.utils.SearchInfo;
 import io.github.mazleo.snap.utils.WindowUtility;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -33,14 +34,12 @@ public class FetchImagesWebService implements Observer {
     private QueryRepository queryRepository;
     private Disposable imageDisposable;
 
-    private static final int IMAGE_TYPE_THUMBNAIL = 0;
-    private static final int IMAGE_TYPE_SRC = 1;
 
     public FetchImagesWebService(QueryRepository queryRepository, SearchResult searchResult) {
         this.queryRepository = queryRepository;
         this.searchResult = searchResult;
         this.currentPexelElement = 0;
-        this.currentImageType = IMAGE_TYPE_THUMBNAIL;
+        this.currentImageType = ImageUtility.IMAGE_TYPE_THUMBNAIL;
         this.imageDisposable = null;
     }
 
@@ -60,9 +59,9 @@ public class FetchImagesWebService implements Observer {
                 PexelsImage imageItem = (PexelsImage) elementItem;
                 int originalWidth = imageItem.getWidth();
                 int originalHeight = imageItem.getHeight();
-                int thumbnailSize = calcThumbnailImageSize(activity);
-                int srcWidth = calcSrcImageWidth(activity);
-                int srcHeight = calcSrcImageHeight(srcWidth, originalWidth, originalHeight);
+                int thumbnailSize = ImageUtility.calcThumbnailImageSize(activity);
+                int srcWidth = ImageUtility.calcSrcImageWidth(activity);
+                int srcHeight = ImageUtility.calcSrcImageHeight(srcWidth, originalWidth, originalHeight);
 
                 Observable<ResponseBody> thumbnailObservable = imageService.fetchMediaBytes(
                         imageItem.getImageUrl(),
@@ -91,30 +90,6 @@ public class FetchImagesWebService implements Observer {
                 .subscribe(this);
     }
 
-    private static int calcThumbnailImageSize(Activity activity) {
-        int screenOrientation = DisplayUtility.getScreenOrientation(activity);
-        int screenWidth = WindowUtility.getWidthPX(activity);
-        int thumbnailSize = -1;
-
-        switch (screenOrientation) {
-            case DisplayUtility.ORIENTATION_PORTRAIT:
-                thumbnailSize = (screenWidth - 2) / 3;
-                break;
-            case DisplayUtility.ORIENTATION_LANDSCAPE:
-                thumbnailSize = (screenWidth - 5) / 6;
-                break;
-        }
-
-        return thumbnailSize;
-    }
-    private static int calcSrcImageWidth(Activity activity) {
-        int screenWidth = WindowUtility.getWidthPX(activity);
-        return screenWidth * 2;
-    }
-    private static int calcSrcImageHeight(int srcWidth, int originalWidth, int originalHeight) {
-        return (originalHeight / originalWidth) * srcWidth;
-    }
-
     private Observable mergeObservablesInList(List<Observable> observableList) {
         Observable<ResponseBody> srcObservable = observableList.get(0);
 
@@ -124,9 +99,12 @@ public class FetchImagesWebService implements Observer {
 
         return srcObservable;
     }
+    private void returnSearchResult() {
+    }
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
+        this.imageDisposable = d;
     }
     @Override
     public void onNext(Object o) {
@@ -145,13 +123,13 @@ public class FetchImagesWebService implements Observer {
         PexelsImage imageObject = (PexelsImage) this.searchResult.getListPexelsElement().get(this.currentPexelElement);
         switch (this.searchResult.getSearchState().getSearchType()) {
             case SearchInfo.SEARCH_TYPE_IMAGE:
-                if (this.currentImageType == IMAGE_TYPE_THUMBNAIL) {
+                if (this.currentImageType == ImageUtility.IMAGE_TYPE_THUMBNAIL) {
                     imageObject.setThumbnailBitmap(bitmap);
-                    this.currentImageType = IMAGE_TYPE_SRC;
+                    this.currentImageType = ImageUtility.IMAGE_TYPE_SRC;
                 }
-                else if (this.currentImageType == IMAGE_TYPE_SRC) {
+                else if (this.currentImageType == ImageUtility.IMAGE_TYPE_SRC) {
                     imageObject.setSrcBitmap(bitmap);
-                    this.currentImageType = IMAGE_TYPE_THUMBNAIL;
+                    this.currentImageType = ImageUtility.IMAGE_TYPE_THUMBNAIL;
                     this.currentPexelElement++;
                 }
                 break;
@@ -163,9 +141,11 @@ public class FetchImagesWebService implements Observer {
     }
     @Override
     public void onError(@NonNull Throwable e) {
+        e.printStackTrace();
     }
     @Override
     public void onComplete() {
         Log.i("APPDEBUG", this.searchResult.toString());
+        returnSearchResult();
     }
 }
