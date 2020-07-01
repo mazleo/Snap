@@ -41,6 +41,7 @@ public class ImageSearchResultDeserializer implements JsonDeserializer<SearchRes
                             .getAsJsonObject("src")
                             .getAsJsonPrimitive("original")
                             .getAsString();
+                    url = url.replace(SearchInfo.PEXELS_PHOTOS_BASE_URL + "/", "");
                     int photographerId = imageJsonObject.getAsJsonPrimitive("photographer_id").getAsInt();
                     String photographerName = imageJsonObject.getAsJsonPrimitive("photographer").getAsString();
 
