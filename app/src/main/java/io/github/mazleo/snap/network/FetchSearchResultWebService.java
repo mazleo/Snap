@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FetchSearchResultWebService implements Observer {
     private QueryRepository queryRepository;
     private Activity activity;
-    private Disposable searchDisposable;
+    private Disposable disposable;
     private FetchThumbnailsWebService thumbnailsWebService;
     private int searchType;
 
@@ -52,6 +52,16 @@ public class FetchSearchResultWebService implements Observer {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
+    public void cleanUp() {
+        this.thumbnailsWebService.cleanUp();
+        if (!this.disposable.isDisposed()) {
+            this.disposable.dispose();
+        }
+        this.disposable = null;
+        this.thumbnailsWebService = null;
+        this.queryRepository = null;
+        this.activity = null;
+    }
 
     @Override
     public void onComplete() {
@@ -68,6 +78,6 @@ public class FetchSearchResultWebService implements Observer {
     }
     @Override
     public void onSubscribe(@NonNull Disposable d) {
-        this.searchDisposable = d;
+        this.disposable = d;
     }
 }

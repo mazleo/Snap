@@ -46,7 +46,6 @@ public class QueryViewModel {
         this.queryRepository.startServiceForSearchResult(pageNumber, resultsPerPage, searchType, query, activity);
     }
     public void appendSearchResult(SearchResult newSearchResult) {
-        Log.i("APPDEBUG", "Appending...");
         if (this.searchResult.getValue() == null) {
             this.searchResult.postValue(newSearchResult);
         }
@@ -56,6 +55,9 @@ public class QueryViewModel {
             currentSearchResult.getListPexelsElement().addAll(newSearchResult.getListPexelsElement());
             this.searchResult.postValue(currentSearchResult);
         }
-        Log.i("APPDEBUG", "Appended...");
+    }
+    public void cleanUp() {
+        this.queryRepository.cleanUp();
+        this.queryRepository = null;
     }
 }
