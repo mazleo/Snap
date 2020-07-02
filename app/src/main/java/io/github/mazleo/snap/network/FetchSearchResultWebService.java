@@ -53,12 +53,14 @@ public class FetchSearchResultWebService implements Observer {
                 .subscribe(this);
     }
     public void cleanUp() {
-        this.thumbnailsWebService.cleanUp();
-        if (!this.disposable.isDisposed()) {
-            this.disposable.dispose();
+        if (this.thumbnailsWebService != null) {
+            this.thumbnailsWebService.cleanUp();
+            this.thumbnailsWebService = null;
         }
-        this.disposable = null;
-        this.thumbnailsWebService = null;
+        if (this.disposable != null && !this.disposable.isDisposed()) {
+            this.disposable.dispose();
+            this.disposable = null;
+        }
         this.queryRepository = null;
         this.activity = null;
     }

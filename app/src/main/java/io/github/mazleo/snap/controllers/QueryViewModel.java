@@ -13,13 +13,16 @@ public class QueryViewModel {
     private MutableLiveData<SearchResult> searchResult;
     private QueryRepository queryRepository;
     private MutableLiveData<Integer> searchProgress;
+    private MutableLiveData<Boolean> noResult;
 
     public QueryViewModel() {
-        searchResult = new MutableLiveData<SearchResult>();
-        searchResult.postValue(null);
+        searchResult = new MutableLiveData<>();
+        searchResult.setValue(null);
         queryRepository = null;
-        searchProgress = new MutableLiveData<Integer>();
-        searchProgress.postValue(SearchInfo.SEARCH_NO_PROGRESS);
+        searchProgress = new MutableLiveData<>();
+        searchProgress.setValue(SearchInfo.SEARCH_NO_PROGRESS);
+        noResult = new MutableLiveData<>();
+        noResult.setValue(false);
     }
 
     public MutableLiveData<SearchResult> getSearchResultLiveData() {
@@ -34,11 +37,17 @@ public class QueryViewModel {
     public int getSearchProgress() {
         return searchProgress.getValue();
     }
+    public boolean getNoResult() {
+        return this.noResult.getValue();
+    }
+    public void setNoResult(boolean noResult) {
+        this.noResult.setValue(noResult);
+    }
     public void setSearchResult(SearchResult searchResult) {
-        this.searchResult.postValue(searchResult);
+        this.searchResult.setValue(searchResult);
     }
     public void setSearchProgress(int searchProgress) {
-        this.searchProgress.postValue(searchProgress);
+        this.searchProgress.setValue(searchProgress);
     }
     public void fetchSearchResult(int pageNumber, int resultsPerPage, int searchType, String query, Activity activity) {
         setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
@@ -47,17 +56,34 @@ public class QueryViewModel {
     }
     public void appendSearchResult(SearchResult newSearchResult) {
         if (this.searchResult.getValue() == null) {
-            this.searchResult.postValue(newSearchResult);
+            this.searchResult.setValue(newSearchResult);
         }
         else {
             SearchResult currentSearchResult = this.searchResult.getValue();
             currentSearchResult.setSearchState(newSearchResult.getSearchState());
             currentSearchResult.getListPexelsElement().addAll(newSearchResult.getListPexelsElement());
-            this.searchResult.postValue(currentSearchResult);
+            this.searchResult.setValue(currentSearchResult);
         }
+        Log.i("APPDEBUG", this.searchResult.getValue().toString());
+    }
+    public void cancelSearchResultRetrieval() {
+        cleanUp();
+        this.setSearchProgress(SearchInfo.SEARCH_NO_PROGRESS);
+        deleteSearchResult();
     }
     public void cleanUp() {
-        this.queryRepository.cleanUp();
-        this.queryRepository = null;
+        if (this.queryRepository != null) {
+            this.queryRepository.cleanUp();
+            this.queryRepository = null;
+        }
+    }
+    public void deleteSearchResult() {
+        this.setSearchResult(null);
+    }
+    public void noResult() {
+        setNoResult(true);
+        setSearchResult(null);
+        setSearchProgress(SearchInfo.SEARCH_NO_PROGRESS);
+        cleanUp();
     }
 }

@@ -23,8 +23,10 @@ public class QueryRepository {
         cleanUp();
     }
     public void cleanUp() {
-        this.searchResultWebService.cleanUp();
-        this.searchResultWebService = null;
+        if (this.searchResultWebService != null) {
+            this.searchResultWebService.cleanUp();
+            this.searchResultWebService = null;
+        }
         this.queryViewModel = null;
     }
 }

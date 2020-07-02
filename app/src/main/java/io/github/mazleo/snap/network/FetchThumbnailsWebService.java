@@ -66,20 +66,27 @@ public class FetchThumbnailsWebService implements Observer {
         }
 
         Observable finalObservable = mergeObservablesInList(observableList);
-        finalObservable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+        if (finalObservable != null) {
+            finalObservable
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this);
+        }
     }
 
     private Observable mergeObservablesInList(List<Observable> observableList) {
-        Observable<ResponseBody> srcObservable = observableList.get(0);
+        if (observableList.size() > 0) {
+            Observable<ResponseBody> srcObservable = observableList.get(0);
 
-        for (int o = 1; o < observableList.size(); o++) {
-            srcObservable = srcObservable.concatWith(observableList.get(o));
+            for (int o = 1; o < observableList.size(); o++) {
+                srcObservable = srcObservable.concatWith(observableList.get(o));
+            }
+
+            return srcObservable;
         }
-
-        return srcObservable;
+        else {
+            return null;
+        }
     }
     private void returnSearchResult() {
         this.queryRepository.passSearchResult(this.searchResult);
@@ -88,7 +95,7 @@ public class FetchThumbnailsWebService implements Observer {
     public void cleanUp() {
         this.searchResult = null;
         this.queryRepository = null;
-        if (!this.disposable.isDisposed()) {
+        if (this.disposable != null && !this.disposable.isDisposed()) {
             this.disposable.dispose();
             this.disposable = null;
         }
@@ -100,6 +107,7 @@ public class FetchThumbnailsWebService implements Observer {
     }
     @Override
     public void onNext(Object o) {
+        Log.i("APPDEBUG", "ON NEXT " + this.currentPexelElement);
         ResponseBody imageResponse = (ResponseBody) o;
         Bitmap bitmap = null;
         try {
