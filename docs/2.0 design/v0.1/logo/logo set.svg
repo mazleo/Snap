@@ -410,7 +410,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.24748737"
-     inkscape:cx="-941.83814"
+     inkscape:cx="-1758.0414"
      inkscape:cy="-178.71041"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -428,7 +428,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -504,8 +504,9 @@
        id="g6073"
        clip-path="url(#clipPath6188)"
        transform="translate(-241.07712,-62.00653)"
-       inkscape:export-xdpi="153.28249"
-       inkscape:export-ydpi="153.28249">
+       inkscape:export-xdpi="91.96949"
+       inkscape:export-ydpi="91.96949"
+       inkscape:export-filename="C:\Users\emjei\OneDrive\Programming\Snap\app\src\main\res\drawable\logo_circle_600x600.png">
       <g
          transform="translate(28.089173,2.526903)"
          id="g4699-0">
