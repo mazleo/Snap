@@ -45,3 +45,12 @@ __JL 6.30.2020__
 - Add Retrofit dependency
 - Create initial network components
 - Add Gson dependency
+
+__JL 7.1.2020__
+
+- Implement search result deserialization
+- Implement ImageService interface
+- Implement fetch image bitmaps
+- Implement ImageUtility class
+- Implement FetchThumbnailsWebService (formerly FetchImagesWebService)
+- Implement return search result
