@@ -42,6 +42,11 @@ public class FetchThumbnailsWebService implements Observer {
     }
 
     public void retrieveImages(Activity activity) {
+        if (this.searchResult.getListPexelsElement().size() == 0) {
+            returnNoResult();
+            return;
+        }
+
         List<Observable> observableList = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -90,6 +95,10 @@ public class FetchThumbnailsWebService implements Observer {
     }
     private void returnSearchResult() {
         this.queryRepository.passSearchResult(this.searchResult);
+        cleanUp();
+    }
+    public void returnNoResult() {
+        this.queryRepository.passNoResult();
         cleanUp();
     }
     public void cleanUp() {

@@ -22,6 +22,10 @@ public class QueryRepository {
         this.queryViewModel.appendSearchResult(searchResult);
         cleanUp();
     }
+    public void passNoResult() {
+        this.queryViewModel.noResult();
+        cleanUp();
+    }
     public void cleanUp() {
         if (this.searchResultWebService != null) {
             this.searchResultWebService.cleanUp();
