@@ -7,7 +7,6 @@ public class PexelsImage extends PexelsElement {
     private int photographerId;
     private String photographerName;
     private Bitmap thumbnailBitmap;
-    private Bitmap srcBitmap;
 
     public PexelsImage(int id, int width, int height, String imageUrl) {
         super(id, width, height);
@@ -51,13 +50,5 @@ public class PexelsImage extends PexelsElement {
 
     public void setThumbnailBitmap(Bitmap thumbnailBitmap) {
         this.thumbnailBitmap = thumbnailBitmap;
-    }
-
-    public Bitmap getSrcBitmap() {
-        return srcBitmap;
-    }
-
-    public void setSrcBitmap(Bitmap srcBitmap) {
-        this.srcBitmap = srcBitmap;
     }
 }

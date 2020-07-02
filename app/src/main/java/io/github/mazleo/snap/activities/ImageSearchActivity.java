@@ -1,21 +1,28 @@
 package io.github.mazleo.snap.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
+import io.github.mazleo.snap.controllers.ImageGridAdapter;
+import io.github.mazleo.snap.controllers.QueryViewModel;
+import io.github.mazleo.snap.utils.DisplayUtility;
+import io.github.mazleo.snap.utils.SearchInfo;
 
 public class ImageSearchActivity extends AppCompatActivity {
     private ImageView appLogo;
     private SearchView searchBar;
     private RecyclerView imageGrid;
+    private QueryViewModel queryViewModel;
+    private AppCompatActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +32,8 @@ public class ImageSearchActivity extends AppCompatActivity {
         appLogo = findViewById(R.id.image_search_activity_logo);
         searchBar = findViewById(R.id.image_search_activity_search_bar);
         imageGrid = findViewById(R.id.image_search_activity_recycler_view);
+        queryViewModel = new ViewModelProvider(this).get(QueryViewModel.class);
+        activity = this;
 
         // Get search bar ready
         Intent prevIntent = getIntent();
@@ -35,7 +44,13 @@ public class ImageSearchActivity extends AppCompatActivity {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                // TODO: Begin search process
+                if (queryViewModel.getSearchProgress() == SearchInfo.SEARCH_IN_PROGRESS) {
+                    queryViewModel.cancelSearchResultRetrieval();
+                }
+
+                queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
+                queryViewModel.fetchSearchResult(1, SearchInfo.RESULTS_PER_PAGE, SearchInfo.SEARCH_TYPE_IMAGE, s, activity);
+
                 return true;
             }
 
@@ -45,6 +60,19 @@ public class ImageSearchActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        GridLayoutManager gridLayoutManager = DisplayUtility.getScreenOrientation(this) == DisplayUtility.ORIENTATION_PORTRAIT
+                ? new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false)
+                : new GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
+        ImageGridAdapter imageGridAdapter = new ImageGridAdapter(this.queryViewModel.getSearchResultLiveData());
+        imageGrid.setLayoutManager(gridLayoutManager);
+        imageGrid.setAdapter(imageGridAdapter);
+
+        this.queryViewModel.getSearchResultLiveData().observe(this,
+                searchResult -> {
+                    imageGridAdapter.notifyDataSetChanged();
+                }
+        );
     }
 
     @Override
