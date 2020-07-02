@@ -82,6 +82,16 @@ public class FetchThumbnailsWebService implements Observer {
         return srcObservable;
     }
     private void returnSearchResult() {
+        this.queryRepository.passSearchResult(this.searchResult);
+        cleanUp();
+    }
+    public void cleanUp() {
+        this.searchResult = null;
+        this.queryRepository = null;
+        if (!this.disposable.isDisposed()) {
+            this.disposable.dispose();
+            this.disposable = null;
+        }
     }
 
     @Override

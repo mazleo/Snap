@@ -1,6 +1,7 @@
 package io.github.mazleo.snap.controllers;
 
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -43,5 +44,18 @@ public class QueryViewModel {
         setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
         this.queryRepository = new QueryRepository(this);
         this.queryRepository.startServiceForSearchResult(pageNumber, resultsPerPage, searchType, query, activity);
+    }
+    public void appendSearchResult(SearchResult newSearchResult) {
+        Log.i("APPDEBUG", "Appending...");
+        if (this.searchResult.getValue() == null) {
+            this.searchResult.postValue(newSearchResult);
+        }
+        else {
+            SearchResult currentSearchResult = this.searchResult.getValue();
+            currentSearchResult.setSearchState(newSearchResult.getSearchState());
+            currentSearchResult.getListPexelsElement().addAll(newSearchResult.getListPexelsElement());
+            this.searchResult.postValue(currentSearchResult);
+        }
+        Log.i("APPDEBUG", "Appended...");
     }
 }

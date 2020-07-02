@@ -2,6 +2,7 @@ package io.github.mazleo.snap.controllers;
 
 import android.app.Activity;
 
+import io.github.mazleo.snap.model.SearchResult;
 import io.github.mazleo.snap.network.FetchSearchResultWebService;
 
 public class QueryRepository {
@@ -16,5 +17,9 @@ public class QueryRepository {
     public void startServiceForSearchResult(int pageNumber, int resultsPerPage, int searchType, String query, Activity activity) {
         this.searchResultWebService = new FetchSearchResultWebService(this, activity, searchType);
         this.searchResultWebService.retrieveSearchResult(pageNumber, resultsPerPage, query);
+    }
+    public void passSearchResult(SearchResult searchResult) {
+        this.queryViewModel.appendSearchResult(searchResult);
+        // TODO: Clean up if needed
     }
 }
