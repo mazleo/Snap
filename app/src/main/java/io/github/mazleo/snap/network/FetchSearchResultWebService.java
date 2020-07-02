@@ -1,6 +1,7 @@
 package io.github.mazleo.snap.network;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,6 +53,9 @@ public class FetchSearchResultWebService implements Observer {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
+    public void passError() {
+        this.queryRepository.passError();
+    }
     public void cleanUp() {
         if (this.thumbnailsWebService != null) {
             this.thumbnailsWebService.cleanUp();
@@ -71,6 +75,7 @@ public class FetchSearchResultWebService implements Observer {
     @Override
     public void onError(@NonNull Throwable e) {
         e.printStackTrace();
+        passError();
     }
     @Override
     public void onNext(Object o) {

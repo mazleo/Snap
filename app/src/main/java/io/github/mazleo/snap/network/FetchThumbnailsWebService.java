@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,11 +96,9 @@ public class FetchThumbnailsWebService implements Observer {
     }
     private void returnSearchResult() {
         this.queryRepository.passSearchResult(this.searchResult);
-        cleanUp();
     }
     public void returnNoResult() {
         this.queryRepository.passNoResult();
-        cleanUp();
     }
     public void cleanUp() {
         this.searchResult = null;
@@ -108,6 +107,9 @@ public class FetchThumbnailsWebService implements Observer {
             this.disposable.dispose();
             this.disposable = null;
         }
+    }
+    public void passError() {
+        this.queryRepository.passError();
     }
 
     @Override
@@ -136,6 +138,7 @@ public class FetchThumbnailsWebService implements Observer {
     @Override
     public void onError(@NonNull Throwable e) {
         e.printStackTrace();
+        passError();
     }
     @Override
     public void onComplete() {

@@ -20,11 +20,12 @@ public class QueryRepository {
     }
     public void passSearchResult(SearchResult searchResult) {
         this.queryViewModel.appendSearchResult(searchResult);
-        cleanUp();
     }
     public void passNoResult() {
         this.queryViewModel.noResult();
-        cleanUp();
+    }
+    public void passError() {
+        this.queryViewModel.onError();
     }
     public void cleanUp() {
         if (this.searchResultWebService != null) {

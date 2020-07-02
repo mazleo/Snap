@@ -14,6 +14,7 @@ public class QueryViewModel {
     private QueryRepository queryRepository;
     private MutableLiveData<Integer> searchProgress;
     private MutableLiveData<Boolean> noResult;
+    private MutableLiveData<Boolean> error;
 
     public QueryViewModel() {
         searchResult = new MutableLiveData<>();
@@ -23,6 +24,8 @@ public class QueryViewModel {
         searchProgress.setValue(SearchInfo.SEARCH_NO_PROGRESS);
         noResult = new MutableLiveData<>();
         noResult.setValue(false);
+        error = new MutableLiveData<>();
+        error.setValue(false);
     }
 
     public MutableLiveData<SearchResult> getSearchResultLiveData() {
@@ -39,6 +42,12 @@ public class QueryViewModel {
     }
     public boolean getNoResult() {
         return this.noResult.getValue();
+    }
+    public boolean getError() {
+        return this.error.getValue();
+    }
+    public void setError(boolean error) {
+        this.error.setValue(error);
     }
     public void setNoResult(boolean noResult) {
         this.noResult.setValue(noResult);
@@ -64,6 +73,7 @@ public class QueryViewModel {
             currentSearchResult.getListPexelsElement().addAll(newSearchResult.getListPexelsElement());
             this.searchResult.setValue(currentSearchResult);
         }
+        cleanUp();
         Log.i("APPDEBUG", this.searchResult.getValue().toString());
     }
     public void cancelSearchResultRetrieval() {
@@ -81,7 +91,15 @@ public class QueryViewModel {
         this.setSearchResult(null);
     }
     public void noResult() {
+        Log.i("APPDEBUG", "No result");
         setNoResult(true);
+        setSearchResult(null);
+        setSearchProgress(SearchInfo.SEARCH_NO_PROGRESS);
+        cleanUp();
+    }
+    public void onError() {
+        Log.i("APPDEBUG", "Error");
+        setError(true);
         setSearchResult(null);
         setSearchProgress(SearchInfo.SEARCH_NO_PROGRESS);
         cleanUp();
