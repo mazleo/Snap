@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import io.github.mazleo.snap.model.SearchResult;
 import io.github.mazleo.snap.model.SearchState;
 import io.github.mazleo.snap.utils.SearchInfo;
 
-public class QueryViewModel {
+public class QueryViewModel extends ViewModel {
     private MutableLiveData<SearchResult> searchResult;
     private QueryRepository queryRepository;
     private MutableLiveData<Integer> searchProgress;
