@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import io.github.mazleo.snap.R;
@@ -23,6 +25,7 @@ public class ImageSearchActivity extends AppCompatActivity {
     private RecyclerView imageGrid;
     private QueryViewModel queryViewModel;
     private AppCompatActivity activity;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class ImageSearchActivity extends AppCompatActivity {
         searchBar = findViewById(R.id.image_search_activity_search_bar);
         imageGrid = findViewById(R.id.image_search_activity_recycler_view);
         queryViewModel = new ViewModelProvider(this).get(QueryViewModel.class);
+        progressBar = findViewById(R.id.image_search_progress);
         activity = this;
 
         // Get search bar ready
@@ -44,9 +48,7 @@ public class ImageSearchActivity extends AppCompatActivity {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                if (queryViewModel.getSearchProgress() == SearchInfo.SEARCH_IN_PROGRESS) {
-                    queryViewModel.cancelSearchResultRetrieval();
-                }
+                queryViewModel.cancelSearchResultRetrieval();
 
                 queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
                 queryViewModel.fetchSearchResult(1, SearchInfo.RESULTS_PER_PAGE, SearchInfo.SEARCH_TYPE_IMAGE, s, activity);
@@ -73,6 +75,16 @@ public class ImageSearchActivity extends AppCompatActivity {
                     imageGridAdapter.notifyDataSetChanged();
                 }
         );
+
+        this.queryViewModel.getSearchProgressLiveData().observe(this,
+                searchProgress -> {
+                    if (searchProgress == SearchInfo.SEARCH_IN_PROGRESS) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
     @Override

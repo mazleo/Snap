@@ -37,4 +37,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_line_top"/>
+
+    <ProgressBar
+        android:id="@+id/image_search_progress"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        android:indeterminateOnly="true" />
 </LinearLayout>

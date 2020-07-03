@@ -76,6 +76,7 @@ public class QueryViewModel extends ViewModel {
         }
         cleanUp();
         Log.i("APPDEBUG", this.searchResult.getValue().toString());
+        this.searchProgress.setValue(SearchInfo.SEARCH_NO_PROGRESS);
     }
     public void cancelSearchResultRetrieval() {
         cleanUp();
