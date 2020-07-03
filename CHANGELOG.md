@@ -54,3 +54,13 @@ __JL 7.1.2020__
 - Implement ImageUtility class
 - Implement FetchThumbnailsWebService (formerly FetchImagesWebService)
 - Implement return search result
+
+__JL 7.2.2020__
+
+- Implement search components clean up
+- Implement passing of no result
+- Implement passing of error
+- Add viewmodel inheritance
+- Implement display of search results
+- Change image grid (recyclerview) layout height
+- Implement progress bar
