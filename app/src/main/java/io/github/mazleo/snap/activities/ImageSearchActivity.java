@@ -57,7 +57,15 @@ public class ImageSearchActivity extends AppCompatActivity {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                // Do nothing
+                queryViewModel.cancelSearchResultRetrieval();
+
+                queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
+                queryViewModel.fetchSearchResult(1, SearchInfo.RESULTS_PER_PAGE, SearchInfo.SEARCH_TYPE_IMAGE, s, activity);
+
+                int dpi = DisplayUtility.getScreenDensityDPI(activity);
+                int paddingPX = (int) WindowUtility.convertDPToPX(80, dpi);
+                imageGrid.setPadding(0, 0, 0, paddingPX);
+
                 return true;
             }
 
