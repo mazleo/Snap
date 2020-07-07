@@ -44,8 +44,14 @@ public class QueryViewModel extends ViewModel {
     public boolean getNoResult() {
         return this.noResult.getValue();
     }
+    public MutableLiveData<Boolean> getNoResultLiveData() {
+        return this.noResult;
+    }
     public boolean getError() {
         return this.error.getValue();
+    }
+    public MutableLiveData<Boolean> getErrorLiveData() {
+        return this.error;
     }
     public void setError(boolean error) {
         this.error.setValue(error);

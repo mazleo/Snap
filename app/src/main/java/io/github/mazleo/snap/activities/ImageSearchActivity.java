@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
 import io.github.mazleo.snap.controllers.ImageGridAdapter;
@@ -112,6 +113,15 @@ public class ImageSearchActivity extends AppCompatActivity {
                 }
         );
 
+        this.queryViewModel.getErrorLiveData().observe(this,
+                error -> {
+                    if (error) {
+                        Toast.makeText(activity, "An error has occured during the search process. The search process has been cancelled.", Toast.LENGTH_LONG).show();
+                        setQueryViewModelError(false);
+                    }
+                }
+        );
+
         this.imageGrid.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -144,5 +154,9 @@ public class ImageSearchActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
+    }
+
+    private void setQueryViewModelError(boolean error) {
+        this.queryViewModel.setError(error);
     }
 }
