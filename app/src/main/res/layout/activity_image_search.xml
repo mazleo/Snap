@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/image_search_activity_root_layout"
+    android:background="@color/white"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent" >
+
     <LinearLayout
+        android:id="@+id/image_search_activity_searchbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="10dp"
-        android:orientation="horizontal" >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/image_search_activity_logo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:transitionName="animated_logo"
             android:contentDescription="@string/app_logo_description"
-            android:src="@drawable/logo_circle" />
+            android:src="@drawable/logo_circle"
+            android:transitionName="animated_logo" />
+
         <SearchView
             android:id="@+id/image_search_activity_search_bar"
-            android:layout_marginStart="10dp"
-            android:layout_height="50dp"
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="2"
-            android:queryHint="@string/search_hint"
-            android:queryBackground="@drawable/transparent_background"
-            android:transitionName="animated_search_bar"
+            android:background="@drawable/border"
             android:elevation="3dp"
             android:iconifiedByDefault="false"
+            android:queryBackground="@drawable/transparent_background"
+            android:queryHint="@string/search_hint"
             android:searchIcon="@drawable/image_icon"
-            android:background="@drawable/border" />
+            android:transitionName="animated_search_bar" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_search_activity_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_line_top"/>
+        android:layout_height="0dp"
+        android:background="@drawable/border_line_top"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintTop_toBottomOf="@+id/image_search_activity_searchbar_layout"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
         android:id="@+id/image_search_progress"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
         android:indeterminate="true"
+        android:indeterminateOnly="true"
         android:visibility="invisible"
-        android:indeterminateOnly="true" />
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="@+id/image_search_activity_recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

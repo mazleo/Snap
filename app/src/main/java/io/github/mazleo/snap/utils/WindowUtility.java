@@ -19,7 +19,10 @@ public class WindowUtility {
         int dpi = DisplayUtility.getScreenDensityDPI(activity);
         return convertPXToDP(heightPX, dpi);
     }
-    private static float convertPXToDP(int px, int dpi) {
+    public static float convertPXToDP(int px, int dpi) {
         return ((float) px / ((float) dpi / 160));
+    }
+    public static float convertDPToPX(int dp, int dpi) {
+        return (int) ((float) dp * ((float) dpi / 160f));
     }
 }
