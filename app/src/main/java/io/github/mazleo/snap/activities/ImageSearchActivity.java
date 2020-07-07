@@ -53,10 +53,15 @@ public class ImageSearchActivity extends AppCompatActivity {
         searchBar.setQuery(prevIntent.getStringExtra("SEARCH_ACTIVITY_QUERY"), false);
         searchBar.requestFocus();
 
-        // TODO: Temporarily use submit to search, then make it to query change
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                // Do nothing
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
                 queryViewModel.cancelSearchResultRetrieval();
 
                 queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
@@ -66,12 +71,6 @@ public class ImageSearchActivity extends AppCompatActivity {
                 int paddingPX = (int) WindowUtility.convertDPToPX(80, dpi);
                 imageGrid.setPadding(0, 0, 0, paddingPX);
 
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                // TODO: Search process
                 return true;
             }
         });
