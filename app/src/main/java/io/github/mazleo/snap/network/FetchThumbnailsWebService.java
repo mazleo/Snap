@@ -9,6 +9,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.github.mazleo.snap.controllers.QueryRepository;
 import io.github.mazleo.snap.model.PexelsElement;
@@ -24,6 +25,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
@@ -50,9 +52,16 @@ public class FetchThumbnailsWebService implements Observer {
 
         List<Observable> observableList = new ArrayList<>();
 
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .callTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SearchInfo.PEXELS_PHOTOS_BASE_URL)
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .client(okHttpClient)
                 .build();
         ImageService imageService = retrofit.create(ImageService.class);
 
