@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
@@ -35,6 +36,7 @@ public class ImageSearchActivity extends AppCompatActivity {
     private AppCompatActivity activity;
     private ProgressBar progressBar;
     private ConstraintLayout rootLayout;
+    private TextView noResultTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class ImageSearchActivity extends AppCompatActivity {
         queryViewModel = new ViewModelProvider(this).get(QueryViewModel.class);
         progressBar = findViewById(R.id.image_search_progress);
         rootLayout = findViewById(R.id.image_search_activity_root_layout);
+        noResultTextView = findViewById(R.id.image_search_activity_no_result);
         activity = this;
 
         // Get search bar ready
@@ -126,6 +129,17 @@ public class ImageSearchActivity extends AppCompatActivity {
                     if (error) {
                         Toast.makeText(activity, "An error has occured during the search process. The search process has been cancelled.", Toast.LENGTH_LONG).show();
                         setQueryViewModelError(false);
+                    }
+                }
+        );
+
+        this.queryViewModel.getNoResultLiveData().observe(this,
+                noResult -> {
+                    if (noResult) {
+                        noResultTextView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        noResultTextView.setVisibility(View.INVISIBLE);
                     }
                 }
         );
