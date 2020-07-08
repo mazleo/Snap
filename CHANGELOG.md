@@ -64,3 +64,14 @@ __JL 7.2.2020__
 - Implement display of search results
 - Change image grid (recyclerview) layout height
 - Implement progress bar
+
+__JL 7.7.2020__
+
+- Make search bar borders thinner
+- Implement next page search upon scrolling to bottom
+- Update SRS
+- Both query submit and change initiates a search process
+- Increase thumbnail download timeouts
+- Use toasts to indicate error
+- Indicate on no results
+- Fix empty query string bug
