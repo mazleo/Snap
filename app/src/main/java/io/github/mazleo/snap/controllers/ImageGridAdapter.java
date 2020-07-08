@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.selection.ItemDetailsLookup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -19,11 +20,21 @@ import io.github.mazleo.snap.model.SearchResult;
 
 public class ImageGridAdapter extends RecyclerView.Adapter {
     public static class ImageGridViewHolder extends RecyclerView.ViewHolder {
-        public View container;
-        public ImageView imageView;
-        public ImageGridViewHolder(View view) {
+        View container;
+        ImageView imageView;
+        List<PexelsElement> pexelsElementList;
+
+        public ImageGridViewHolder(View view, List<PexelsElement> pexelsElementList) {
             super(view);
             this.imageView = view.findViewById(R.id.image_grid_imageview);
+            this.pexelsElementList = pexelsElementList;
+        }
+
+        public ItemDetailsLookup.ItemDetails getItemDetails() {
+            int adapterPosition = getAdapterPosition();
+            PexelsElement selectionKey = pexelsElementList.get(adapterPosition);
+
+            return new ImageItemDetails(adapterPosition, selectionKey);
         }
     }
 
@@ -37,7 +48,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View container = (View) LayoutInflater.from(parent.getContext()).inflate(R.layout.image_grid_item, parent, false);
-        ImageGridViewHolder imageGridViewHolder = new ImageGridViewHolder(container);
+        ImageGridViewHolder imageGridViewHolder = new ImageGridViewHolder(container, searchResultMutableLiveData.getValue().getListPexelsElement());
         return imageGridViewHolder;
     }
 

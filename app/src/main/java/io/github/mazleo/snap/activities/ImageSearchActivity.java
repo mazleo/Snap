@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +25,11 @@ import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
 import io.github.mazleo.snap.controllers.ImageGridAdapter;
+import io.github.mazleo.snap.controllers.ImageItemDetailsLookup;
+import io.github.mazleo.snap.controllers.ImageKeyProvider;
 import io.github.mazleo.snap.controllers.QueryViewModel;
+import io.github.mazleo.snap.model.PexelsElement;
+import io.github.mazleo.snap.model.PexelsImage;
 import io.github.mazleo.snap.utils.DisplayUtility;
 import io.github.mazleo.snap.utils.SearchInfo;
 import io.github.mazleo.snap.utils.WindowUtility;
@@ -37,6 +43,7 @@ public class ImageSearchActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ConstraintLayout rootLayout;
     private TextView noResultTextView;
+    private SelectionTracker selectionTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +121,27 @@ public class ImageSearchActivity extends AppCompatActivity {
                         }
                         else {
                             imageGrid.setPadding(0, 0, 0, 0);
+                        }
+
+                        if (this.selectionTracker == null) {
+                            this.selectionTracker = new SelectionTracker.Builder<>(
+                                    "image-selection",
+                                    this.imageGrid,
+                                    new ImageKeyProvider(1, searchResult.getListPexelsElement()),
+                                    new ImageItemDetailsLookup(this.imageGrid),
+                                    StorageStrategy.createParcelableStorage(PexelsElement.class)
+                            )
+                                    .withOnItemActivatedListener(
+                                            (item, e) -> {
+                                                if (item.getSelectionKey() instanceof PexelsImage) {
+                                                    PexelsImage pexelsImage = (PexelsImage) item.getSelectionKey();
+                                                    // TODO: Handle item click
+                                                    Log.i("APPDEBUG", "URL: " + pexelsImage.getImageUrl());
+                                                }
+                                                return true;
+                                            }
+                                    )
+                                    .build();
                         }
                     }
                 }
