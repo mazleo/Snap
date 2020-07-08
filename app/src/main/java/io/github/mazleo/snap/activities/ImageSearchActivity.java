@@ -135,8 +135,9 @@ public class ImageSearchActivity extends AppCompatActivity {
                                             (item, e) -> {
                                                 if (item.getSelectionKey() instanceof PexelsImage) {
                                                     PexelsImage pexelsImage = (PexelsImage) item.getSelectionKey();
-                                                    // TODO: Handle item click
-                                                    Log.i("APPDEBUG", "URL: " + pexelsImage.getImageUrl());
+                                                    Intent intent = new Intent(activity, ViewImageActivity.class);
+                                                    intent.putExtra("PEXELS_IMAGE", pexelsImage);
+                                                    startActivity(intent);
                                                 }
                                                 return true;
                                             }
