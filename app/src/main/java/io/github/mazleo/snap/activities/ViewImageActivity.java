@@ -1,6 +1,7 @@
 package io.github.mazleo.snap.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
 import io.github.mazleo.snap.controllers.ImageViewModel;
+import io.github.mazleo.snap.fragments.ImageInfoDialogFragment;
 import io.github.mazleo.snap.model.PexelsImage;
 
 public class ViewImageActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class ViewImageActivity extends AppCompatActivity {
     private ImageViewModel imageViewModel;
     private Activity activity;
     private ProgressBar progressBar;
+    private DialogFragment infoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class ViewImageActivity extends AppCompatActivity {
         infoButton = findViewById(R.id.view_image_activity_information_button);
         progressBar = findViewById(R.id.view_image_activity_progress_bar);
         activity = this;
+        infoDialog = ImageInfoDialogFragment.newInstance(pexelsImage);
 
         imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
 
@@ -85,6 +89,13 @@ public class ViewImageActivity extends AppCompatActivity {
                     imageViewModel = null;
                 }
                 activity.finish();
+            }
+        });
+
+        this.infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                infoDialog.show(getSupportFragmentManager(), "info-dialog");
             }
         });
 

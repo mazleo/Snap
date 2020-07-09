@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="15dp"
+    android:background="@drawable/image_info_background"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/dialog_photo_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Photo ID"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dialog_photographer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Photographer Name"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_photo_id" />
+
+    <TextView
+        android:id="@+id/dialog_photographer_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Photographer ID"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_photographer_name" />
+
+    <TextView
+        android:id="@+id/dialog_image_resolution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resolution"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_photographer_id" />
+</androidx.constraintlayout.widget.ConstraintLayout>
