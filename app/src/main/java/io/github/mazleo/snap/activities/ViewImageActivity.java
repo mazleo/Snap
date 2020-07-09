@@ -80,6 +80,10 @@ public class ViewImageActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (imageViewModel != null) {
+                    imageViewModel.cleanUpWebService();
+                    imageViewModel = null;
+                }
                 activity.finish();
             }
         });
@@ -90,6 +94,10 @@ public class ViewImageActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (this.imageViewModel != null) {
+            this.imageViewModel.cleanUpWebService();
+            this.imageViewModel = null;
+        }
         activity.finish();
     }
 }
