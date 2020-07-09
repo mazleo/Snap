@@ -75,3 +75,8 @@ __JL 7.7.2020__
 - Use toasts to indicate error
 - Indicate on no results
 - Fix empty query string bug
+
+__JL 7.8.2020__
+
+- Implement parcelables
+- Implement ViewImageActivity
