@@ -3,8 +3,8 @@ package io.github.mazleo.snap.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.selection.SelectionPredicates;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -15,21 +15,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
+import io.github.mazleo.snap.controllers.IdItemDetailsLookup;
+import io.github.mazleo.snap.controllers.IdKeyProvider;
 import io.github.mazleo.snap.controllers.ImageGridAdapter;
-import io.github.mazleo.snap.controllers.ImageItemDetailsLookup;
-import io.github.mazleo.snap.controllers.ImageKeyProvider;
 import io.github.mazleo.snap.controllers.QueryViewModel;
-import io.github.mazleo.snap.model.PexelsElement;
-import io.github.mazleo.snap.model.PexelsImage;
 import io.github.mazleo.snap.utils.DisplayUtility;
 import io.github.mazleo.snap.utils.SearchInfo;
 import io.github.mazleo.snap.utils.WindowUtility;
@@ -127,23 +123,29 @@ public class ImageSearchActivity extends AppCompatActivity {
                             this.selectionTracker = new SelectionTracker.Builder<>(
                                     "image-selection",
                                     this.imageGrid,
-                                    new ImageKeyProvider(1, searchResult.getListPexelsElement()),
-                                    new ImageItemDetailsLookup(this.imageGrid),
-                                    StorageStrategy.createParcelableStorage(PexelsElement.class)
+                                    new IdKeyProvider(1, this.imageGrid),
+                                    new IdItemDetailsLookup(this.imageGrid),
+                                    StorageStrategy.createLongStorage()
                             )
                                     .withOnItemActivatedListener(
                                             (item, e) -> {
-                                                if (item.getSelectionKey() instanceof PexelsImage) {
-                                                    PexelsImage pexelsImage = (PexelsImage) item.getSelectionKey();
-                                                    Intent intent = new Intent(activity, ViewImageActivity.class);
-                                                    intent.putExtra("PEXELS_IMAGE", pexelsImage);
-                                                    startActivity(intent);
-                                                }
+                                                this.selectionTracker.select(item.getSelectionKey());
                                                 return true;
                                             }
                                     )
+                                    .withSelectionPredicate(SelectionPredicates.createSelectSingleAnything())
                                     .build();
+                            this.selectionTracker.addObserver(new SelectionTracker.SelectionObserver() {
+                                @Override
+                                public void onItemStateChanged(@NonNull Object key, boolean selected) {
+                                    super.onItemStateChanged(key, selected);
+                                    if (selected) {
+                                        // TODO Launch ViewImageActivity
+                                    }
+                                }
+                            });
                         }
+                        imageGridAdapter.setSelectionTracker(this.selectionTracker);
                     }
                 }
         );

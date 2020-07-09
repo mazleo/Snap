@@ -8,10 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.selection.ItemDetailsLookup;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ImageItemDetailsLookup extends ItemDetailsLookup {
+public class IdItemDetailsLookup extends ItemDetailsLookup {
     private final RecyclerView recyclerView;
 
-    public ImageItemDetailsLookup(RecyclerView recyclerView) {
+    public IdItemDetailsLookup(RecyclerView recyclerView) {
         this.recyclerView = recyclerView;
     }
 
