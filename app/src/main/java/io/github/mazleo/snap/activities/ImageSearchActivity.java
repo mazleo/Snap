@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -72,6 +72,14 @@ public class ImageSearchActivity extends AppCompatActivity {
                         }
                     }
 
+                    View focusedView = getCurrentFocus();
+                    if (focusedView == null) {
+                        focusedView = new View(activity);
+                    }
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+                    searchBar.clearFocus();
+
                     queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
                     queryViewModel.setNoResult(false);
                     queryViewModel.fetchSearchResult(1, SearchInfo.RESULTS_PER_PAGE, SearchInfo.SEARCH_TYPE_IMAGE, s, activity);
@@ -123,8 +131,6 @@ public class ImageSearchActivity extends AppCompatActivity {
                     }
                     imageGridAdapter.notifyDataSetChanged();
                     if (searchResult != null) {
-                        this.imageGrid.requestFocus();
-
                         int listSize = searchResult.getListPexelsElement().size();
                         int totalSize = searchResult.getSearchState().getTotalResults();
                         if (listSize < totalSize) {
