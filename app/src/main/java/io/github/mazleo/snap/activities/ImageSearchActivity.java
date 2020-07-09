@@ -26,6 +26,7 @@ import io.github.mazleo.snap.controllers.IdItemDetailsLookup;
 import io.github.mazleo.snap.controllers.IdKeyProvider;
 import io.github.mazleo.snap.controllers.ImageGridAdapter;
 import io.github.mazleo.snap.controllers.QueryViewModel;
+import io.github.mazleo.snap.model.PexelsImage;
 import io.github.mazleo.snap.utils.DisplayUtility;
 import io.github.mazleo.snap.utils.SearchInfo;
 import io.github.mazleo.snap.utils.WindowUtility;
@@ -65,6 +66,11 @@ public class ImageSearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String s) {
                 if (s.length() > 0) {
                     queryViewModel.cancelSearchResultRetrieval();
+                    if (selectionTracker != null) {
+                        if (selectionTracker.hasSelection()) {
+                            selectionTracker.clearSelection();
+                        }
+                    }
 
                     queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
                     queryViewModel.setNoResult(false);
@@ -82,6 +88,11 @@ public class ImageSearchActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String s) {
                 if (s.length() > 0) {
                     queryViewModel.cancelSearchResultRetrieval();
+                    if (selectionTracker != null) {
+                        if (selectionTracker.hasSelection()) {
+                            selectionTracker.clearSelection();
+                        }
+                    }
 
                     queryViewModel.setSearchProgress(SearchInfo.SEARCH_IN_PROGRESS);
                     queryViewModel.setNoResult(false);
@@ -105,8 +116,15 @@ public class ImageSearchActivity extends AppCompatActivity {
 
         this.queryViewModel.getSearchResultLiveData().observe(this,
                 searchResult -> {
+                    if (this.selectionTracker != null) {
+                        if (this.selectionTracker.hasSelection()) {
+                            this.selectionTracker.clearSelection();
+                        }
+                    }
                     imageGridAdapter.notifyDataSetChanged();
                     if (searchResult != null) {
+                        this.imageGrid.requestFocus();
+
                         int listSize = searchResult.getListPexelsElement().size();
                         int totalSize = searchResult.getSearchState().getTotalResults();
                         if (listSize < totalSize) {
@@ -129,7 +147,9 @@ public class ImageSearchActivity extends AppCompatActivity {
                             )
                                     .withOnItemActivatedListener(
                                             (item, e) -> {
-                                                this.selectionTracker.select(item.getSelectionKey());
+                                                if (!this.selectionTracker.isSelected(item.getSelectionKey())) {
+                                                    this.selectionTracker.select(item.getSelectionKey());
+                                                }
                                                 return true;
                                             }
                                     )
@@ -140,7 +160,13 @@ public class ImageSearchActivity extends AppCompatActivity {
                                 public void onItemStateChanged(@NonNull Object key, boolean selected) {
                                     super.onItemStateChanged(key, selected);
                                     if (selected) {
-                                        // TODO Launch ViewImageActivity
+                                        int pos = Math.toIntExact((long) key);
+                                        PexelsImage pexelsImage = (PexelsImage) ((ImageSearchActivity) activity).getQueryViewModel().getSearchResultObject().getListPexelsElement().get(pos);
+//                                        PexelsImage pexelsImage = (PexelsImage) ac.getListPexelsElement().get(pos);
+                                        Intent intent = new Intent(activity, ViewImageActivity.class);
+                                        intent.putExtra("PEXELS_IMAGE", pexelsImage);
+
+                                        startActivity(intent);
                                     }
                                 }
                             });
@@ -217,5 +243,9 @@ public class ImageSearchActivity extends AppCompatActivity {
 
     private void setQueryViewModelError(boolean error) {
         this.queryViewModel.setError(error);
+    }
+
+    public QueryViewModel getQueryViewModel() {
+        return this.queryViewModel;
     }
 }
