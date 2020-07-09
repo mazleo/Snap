@@ -9,12 +9,14 @@ public class PexelsImage extends PexelsElement implements Parcelable {
     private int photographerId;
     private String photographerName;
     private Bitmap thumbnailBitmap;
+    private Bitmap imageBitmap;
 
     public PexelsImage(int id, int width, int height, String imageUrl) {
         super(id, width, height);
         this.imageUrl = imageUrl;
         this.photographerId = -1;
         this.photographerName = null;
+        this.imageBitmap = null;
     }
     public PexelsImage(int id, int width, int height, String imageUrl, int photographerId, String photographerName) {
         this(id, width, height, imageUrl);
@@ -76,6 +78,14 @@ public class PexelsImage extends PexelsElement implements Parcelable {
 
     public void setThumbnailBitmap(Bitmap thumbnailBitmap) {
         this.thumbnailBitmap = thumbnailBitmap;
+    }
+
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
     }
 
     @Override

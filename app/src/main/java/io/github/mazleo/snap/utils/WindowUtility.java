@@ -25,4 +25,10 @@ public class WindowUtility {
     public static float convertDPToPX(int dp, int dpi) {
         return (int) ((float) dp * ((float) dpi / 160f));
     }
+    public static float calcScreenAspectRatio(Activity activity) {
+        float width = getWidthPX(activity);
+        float height = getHeightPX(activity);
+
+        return width / height;
+    }
 }
