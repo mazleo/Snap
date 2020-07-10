@@ -90,3 +90,11 @@ __JL 7.9.2020__
 - Change logo image next to search bar to smaller image
 - Create and set launcher icons
 - Clean up activity classes and some others
+
+__JL 7.10.2020__
+
+- Add README
+- Clean up all files
+- Finalize docs and project
+- Fix fragment dialog bug; crash on configuration change
+- Add release apk
