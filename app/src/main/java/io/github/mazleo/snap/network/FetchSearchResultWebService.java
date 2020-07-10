@@ -1,7 +1,6 @@
 package io.github.mazleo.snap.network;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,12 +33,9 @@ public class FetchSearchResultWebService implements Observer {
 
     public void retrieveSearchResult(int pageNumber, int resultsPerPage, String query) {
         Observable<SearchResult> searchResultObservable = null;
+
         Gson gson = new GsonBuilder().registerTypeAdapter(SearchResult.class, new ImageSearchResultDeserializer()).create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SearchInfo.PEXELS_SEARCH_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build();
+        Retrofit retrofit = buildRetrofitWithCustomDeserializer(gson);
         SearchResultService searchResultService = retrofit.create(SearchResultService.class);
 
         if (this.searchType == SearchInfo.SEARCH_TYPE_IMAGE) {
@@ -53,36 +49,57 @@ public class FetchSearchResultWebService implements Observer {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
+
+    private Retrofit buildRetrofitWithCustomDeserializer(Gson gson) {
+        return new Retrofit.Builder()
+                .baseUrl(SearchInfo.PEXELS_SEARCH_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build();
+    }
+
     public void passError() {
         this.queryRepository.passError();
     }
+
     public void cleanUp() {
-        if (this.thumbnailsWebService != null) {
-            this.thumbnailsWebService.cleanUp();
-            this.thumbnailsWebService = null;
-        }
+        cleanUpThumbnailsWebService();
+        cleanUpDisposable();
+        this.queryRepository = null;
+        this.activity = null;
+    }
+
+    private void cleanUpDisposable() {
         if (this.disposable != null && !this.disposable.isDisposed()) {
             this.disposable.dispose();
             this.disposable = null;
         }
-        this.queryRepository = null;
-        this.activity = null;
+    }
+
+    private void cleanUpThumbnailsWebService() {
+        if (this.thumbnailsWebService != null) {
+            this.thumbnailsWebService.cleanUp();
+            this.thumbnailsWebService = null;
+        }
     }
 
     @Override
     public void onComplete() {
     }
+
     @Override
     public void onError(@NonNull Throwable e) {
         e.printStackTrace();
         passError();
     }
+
     @Override
     public void onNext(Object o) {
         SearchResult searchResult = (SearchResult) o;
         this.thumbnailsWebService = new FetchThumbnailsWebService(this.queryRepository, searchResult);
         this.thumbnailsWebService.retrieveImages(this.activity);
     }
+
     @Override
     public void onSubscribe(@NonNull Disposable d) {
         this.disposable = d;
