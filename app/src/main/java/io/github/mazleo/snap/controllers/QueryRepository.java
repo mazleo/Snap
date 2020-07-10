@@ -18,15 +18,19 @@ public class QueryRepository {
         this.searchResultWebService = new FetchSearchResultWebService(this, activity, searchType);
         this.searchResultWebService.retrieveSearchResult(pageNumber, resultsPerPage, query);
     }
+
     public void passSearchResult(SearchResult searchResult) {
         this.queryViewModel.appendSearchResult(searchResult);
     }
+
     public void passNoResult() {
         this.queryViewModel.noResult();
     }
+
     public void passError() {
         this.queryViewModel.onError();
     }
+
     public void cleanUp() {
         if (this.searchResultWebService != null) {
             this.searchResultWebService.cleanUp();
