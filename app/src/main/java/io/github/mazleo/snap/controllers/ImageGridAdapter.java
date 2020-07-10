@@ -1,7 +1,6 @@
 package io.github.mazleo.snap.controllers;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,14 +45,6 @@ public class ImageGridAdapter extends RecyclerView.Adapter {
         this.searchResultMutableLiveData = searchResultMutableLiveData;
     }
 
-    public SelectionTracker getSelectionTracker() {
-        return selectionTracker;
-    }
-
-    public void setSelectionTracker(SelectionTracker selectionTracker) {
-        this.selectionTracker = selectionTracker;
-    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,5 +77,13 @@ public class ImageGridAdapter extends RecyclerView.Adapter {
     @Override
     public long getItemId(int position) {
         return (long) position;
+    }
+
+    public SelectionTracker getSelectionTracker() {
+        return selectionTracker;
+    }
+
+    public void setSelectionTracker(SelectionTracker selectionTracker) {
+        this.selectionTracker = selectionTracker;
     }
 }
