@@ -37,16 +37,23 @@ public class ImageInfoDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View infoView = inflater.inflate(R.layout.image_info_dialog, container, false);
 
+        initializeFields(infoView);
+        populateFields();
+
+        return infoView;
+    }
+
+    private void populateFields() {
+        photoIdTextView.setText(getString(R.string.label_photo_id, pexelsImage.getId()));
+        photographerNameTextView.setText(getString(R.string.label_photographer_name, pexelsImage.getPhotographerName()));
+        photographerIdTextView.setText(getString(R.string.label_photographer_id, pexelsImage.getPhotographerId()));
+        resolutionTextView.setText(getString(R.string.label_resolution, pexelsImage.getWidth(), pexelsImage.getHeight()));
+    }
+
+    private void initializeFields(View infoView) {
         photoIdTextView = infoView.findViewById(R.id.dialog_photo_id);
         photographerNameTextView = infoView.findViewById(R.id.dialog_photographer_name);
         photographerIdTextView = infoView.findViewById(R.id.dialog_photographer_id);
         resolutionTextView = infoView.findViewById(R.id.dialog_image_resolution);
-
-        photoIdTextView.setText("Photo ID: " + pexelsImage.getId());
-        photographerNameTextView.setText("Photographer: " + pexelsImage.getPhotographerName());
-        photographerIdTextView.setText("Photographer ID: " + pexelsImage.getPhotographerId());
-        resolutionTextView.setText("Resolution: " + pexelsImage.getWidth() + " x " + pexelsImage.getHeight());
-
-        return infoView;
     }
 }
