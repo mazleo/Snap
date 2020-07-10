@@ -24,39 +24,48 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        appLogo = findViewById(R.id.search_activity_logo);
-        searchBar = findViewById(R.id.search_activity_search_bar);
-        activity = this;
-        activitySwitched = false;
+        initializeFields();
+        passOnSearchSubmit();
+        startNewActivityOnQueryChange();
+    }
 
-        // Do nothing on search button clicked
-        searchBar.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {}
-        });
-
+    private void startNewActivityOnQueryChange() {
         searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            // Do nothing on query submission
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return true;
             }
 
-            // Switch activities on searchview query change
             @Override
             public boolean onQueryTextChange(String s) {
-                // Starting new activity with passed data
                 activitySwitched = true;
-                Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
-                intent.putExtra("SEARCH_ACTIVITY_QUERY", s);
-
-                // Transition animations
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity, Pair.create((View) appLogo, "animated_logo"), Pair.create((View) searchBar, "animated_search_bar"));
-                startActivity(intent, options.toBundle());
+                startActivityWithTransitionAnimation(s);
 
                 return true;
             }
         });
+    }
+
+    private void startActivityWithTransitionAnimation(String s) {
+        Intent intent = new Intent(getApplicationContext(), ImageSearchActivity.class);
+        intent.putExtra("SEARCH_ACTIVITY_QUERY", s);
+
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity, Pair.create((View) appLogo, "animated_logo"), Pair.create((View) searchBar, "animated_search_bar"));
+        startActivity(intent, options.toBundle());
+    }
+
+    private void passOnSearchSubmit() {
+        searchBar.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {}
+        });
+    }
+
+    private void initializeFields() {
+        appLogo = findViewById(R.id.search_activity_logo);
+        searchBar = findViewById(R.id.search_activity_search_bar);
+        activity = this;
+        activitySwitched = false;
     }
 
     @Override
