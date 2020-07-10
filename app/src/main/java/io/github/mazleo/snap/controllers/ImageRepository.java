@@ -1,7 +1,6 @@
 package io.github.mazleo.snap.controllers;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 
 import io.github.mazleo.snap.model.PexelsImage;
 import io.github.mazleo.snap.network.FetchImageWebService;
