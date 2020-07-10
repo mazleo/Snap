@@ -80,3 +80,13 @@ __JL 7.8.2020__
 
 - Implement parcelables
 - Implement ViewImageActivity
+
+__JL 7.9.2020__
+
+- Fix image grid selection bugs
+- Allow canceling of image retrieval
+- Change focus from searchbar to image grid on query submit
+- Implement image info display in view image
+- Change logo image next to search bar to smaller image
+- Create and set launcher icons
+- Clean up activity classes and some others
