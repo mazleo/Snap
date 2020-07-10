@@ -1,9 +1,16 @@
 <resources>
+    <!-- Application -->
     <string name="app_name">Snap</string>
     <string name="app_logo_description">Application logo</string>
+
+    <!-- Search component -->
     <string name="search_hint">Search for images</string>
     <string name="no_result">No results</string>
+
+    <!-- View image component -->
     <string name="view_image">View image</string>
+
+    <!-- Image info component -->
     <string name="label_photo_id">Photo ID: %1$d</string>
     <string name="label_photographer_name">Photographer: %1$s</string>
     <string name="label_photographer_id">Photographer ID: %1$d</string>

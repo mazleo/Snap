@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent" >
 
+    <!-- Search bar area -->
     <LinearLayout
         android:id="@+id/image_search_activity_searchbar_layout"
         android:layout_width="match_parent"
@@ -40,6 +41,7 @@
             android:transitionName="animated_search_bar" />
     </LinearLayout>
 
+    <!-- Image Grid area -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_search_activity_recycler_view"
         android:layout_width="match_parent"
