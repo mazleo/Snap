@@ -15,6 +15,21 @@ public class SearchResult<T> {
         this.clazz = clazz;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder elementListStr = new StringBuilder("[");
+        for (int s = 0; s < listPexelsElement.size(); s++) {
+            elementListStr.append(listPexelsElement.get(s));
+            if (s != listPexelsElement.size() - 1) {
+                elementListStr.append(", ");
+            }
+        }
+        elementListStr.append("]");
+
+        return this.searchState + "," + elementListStr.toString();
+    }
+
     public SearchState getSearchState() {
         return searchState;
     }
@@ -29,20 +44,5 @@ public class SearchResult<T> {
 
     public void setListPexelsElement(List<PexelsElement> listPexelsElement) {
         this.listPexelsElement = listPexelsElement;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        StringBuilder elementListStr = new StringBuilder("[");
-        for (int s = 0; s < listPexelsElement.size(); s++) {
-            elementListStr.append(listPexelsElement.get(s));
-            if (s != listPexelsElement.size() - 1) {
-                elementListStr.append(", ");
-            }
-        }
-        elementListStr.append("]");
-
-        return this.searchState + "," + elementListStr.toString();
     }
 }
