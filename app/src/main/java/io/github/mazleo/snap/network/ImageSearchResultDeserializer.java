@@ -1,7 +1,5 @@
 package io.github.mazleo.snap.network;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -20,16 +18,28 @@ import io.github.mazleo.snap.utils.SearchInfo;
 
 public class ImageSearchResultDeserializer implements JsonDeserializer<SearchResult> {
     public SearchResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-        SearchState searchState = new SearchState();
-        List<PexelsElement> pexelsElementList = new ArrayList<>();
-
         JsonObject resultJsonObject = json.getAsJsonObject();
 
+        SearchState searchState = getPopulatedSearchState(resultJsonObject);
+        List<PexelsElement> pexelsElementList = getPopulatedPexelsElementList(resultJsonObject);
+
+        SearchResult searchResult = new SearchResult(searchState, pexelsElementList, (Class) typeOfT);
+
+        return searchResult;
+    }
+
+    private SearchState getPopulatedSearchState(JsonObject resultJsonObject) {
+        SearchState searchState = new SearchState();
         searchState.setTotalResults(resultJsonObject.getAsJsonPrimitive("total_results").getAsInt());
         searchState.setOpenPages(resultJsonObject.getAsJsonPrimitive("page").getAsInt());
         searchState.setResultsPerPage(resultJsonObject.getAsJsonPrimitive("per_page").getAsInt());
         searchState.setSearchType(resultJsonObject.has("photos") ? SearchInfo.SEARCH_TYPE_IMAGE : SearchInfo.SEARCH_TYPE_VIDEO);
 
+        return searchState;
+    }
+
+    private List<PexelsElement> getPopulatedPexelsElementList(JsonObject resultJsonObject) {
+        List<PexelsElement> pexelsElementList = new ArrayList<>();
         JsonArray imagesJsonArray = resultJsonObject.getAsJsonArray("photos");
         imagesJsonArray.forEach(
                 imageJsonElement -> {
@@ -50,8 +60,6 @@ public class ImageSearchResultDeserializer implements JsonDeserializer<SearchRes
                 }
         );
 
-        SearchResult searchResult = new SearchResult(searchState, pexelsElementList, (Class) typeOfT);
-
-        return searchResult;
+        return pexelsElementList;
     }
 }
