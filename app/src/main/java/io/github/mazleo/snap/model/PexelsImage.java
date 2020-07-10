@@ -18,11 +18,13 @@ public class PexelsImage extends PexelsElement implements Parcelable {
         this.photographerName = null;
         this.imageBitmap = null;
     }
+
     public PexelsImage(int id, int width, int height, String imageUrl, int photographerId, String photographerName) {
         this(id, width, height, imageUrl);
         this.photographerId = photographerId;
         this.photographerName = photographerName;
     }
+
     public PexelsImage(Parcel in) {
         super(in);
         this.imageUrl = in.readString();
@@ -47,6 +49,19 @@ public class PexelsImage extends PexelsElement implements Parcelable {
             return new PexelsImage[i];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return super.describeContents();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        super.writeToParcel(parcel, i);
+        parcel.writeString(this.imageUrl);
+        parcel.writeInt(this.photographerId);
+        parcel.writeString(this.photographerName);
+    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -86,18 +101,5 @@ public class PexelsImage extends PexelsElement implements Parcelable {
 
     public void setImageBitmap(Bitmap imageBitmap) {
         this.imageBitmap = imageBitmap;
-    }
-
-    @Override
-    public int describeContents() {
-        return super.describeContents();
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        super.writeToParcel(parcel, i);
-        parcel.writeString(this.imageUrl);
-        parcel.writeInt(this.photographerId);
-        parcel.writeString(this.photographerName);
     }
 }
