@@ -3,8 +3,6 @@ package io.github.mazleo.snap.network;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,10 +13,8 @@ import io.github.mazleo.snap.controllers.QueryRepository;
 import io.github.mazleo.snap.model.PexelsElement;
 import io.github.mazleo.snap.model.PexelsImage;
 import io.github.mazleo.snap.model.SearchResult;
-import io.github.mazleo.snap.utils.DisplayUtility;
 import io.github.mazleo.snap.utils.ImageUtility;
 import io.github.mazleo.snap.utils.SearchInfo;
-import io.github.mazleo.snap.utils.WindowUtility;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
@@ -45,26 +41,48 @@ public class FetchThumbnailsWebService implements Observer {
     }
 
     public void retrieveImages(Activity activity) {
-        if (this.searchResult.getListPexelsElement().size() == 0) {
+        if (isListPexelsElementEmpty()) {
             returnNoResult();
             return;
         }
 
-        List<Observable> observableList = new ArrayList<>();
+        OkHttpClient okHttpClient = buildOkHttpClientWithCustomTimeout();
+        Retrofit retrofit = buildRetrofitWithRxJava(okHttpClient);
+        ImageService imageService = retrofit.create(ImageService.class);
+        List<Observable> observableList = populateObservableList(activity, imageService);
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        Observable finalObservable = mergeObservablesInList(observableList);
+        if (finalObservable != null) {
+            finalObservable
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this);
+        }
+    }
+
+    private boolean isListPexelsElementEmpty() {
+        return this.searchResult.getListPexelsElement().size() == 0;
+    }
+
+    private OkHttpClient buildOkHttpClientWithCustomTimeout() {
+        return new OkHttpClient.Builder()
                 .callTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
                 .build();
-        Retrofit retrofit = new Retrofit.Builder()
+    }
+
+    private Retrofit buildRetrofitWithRxJava(OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
                 .baseUrl(SearchInfo.PEXELS_PHOTOS_BASE_URL)
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
-        ImageService imageService = retrofit.create(ImageService.class);
+    }
 
+    private List<Observable> populateObservableList(Activity activity, ImageService imageService) {
+        List<Observable> observableList = new ArrayList<>();
         List<PexelsElement> pexelsElementList = searchResult.getListPexelsElement();
         for (PexelsElement elementItem : pexelsElementList) {
             PexelsImage imageItem = (PexelsImage) elementItem;
@@ -80,13 +98,7 @@ public class FetchThumbnailsWebService implements Observer {
             observableList.add(thumbnailObservable);
         }
 
-        Observable finalObservable = mergeObservablesInList(observableList);
-        if (finalObservable != null) {
-            finalObservable
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this);
-        }
+        return observableList;
     }
 
     private Observable mergeObservablesInList(List<Observable> observableList) {
@@ -103,20 +115,28 @@ public class FetchThumbnailsWebService implements Observer {
             return null;
         }
     }
+
     private void returnSearchResult() {
         this.queryRepository.passSearchResult(this.searchResult);
     }
+
     public void returnNoResult() {
         this.queryRepository.passNoResult();
     }
+
     public void cleanUp() {
         this.searchResult = null;
         this.queryRepository = null;
+        cleanUpDisposable();
+    }
+
+    private void cleanUpDisposable() {
         if (this.disposable != null && !this.disposable.isDisposed()) {
             this.disposable.dispose();
             this.disposable = null;
         }
     }
+
     public void passError() {
         this.queryRepository.passError();
     }
@@ -125,9 +145,9 @@ public class FetchThumbnailsWebService implements Observer {
     public void onSubscribe(@NonNull Disposable d) {
         this.disposable = d;
     }
+
     @Override
     public void onNext(Object o) {
-        Log.i("APPDEBUG", "ON NEXT " + this.currentPexelElement);
         ResponseBody imageResponse = (ResponseBody) o;
         Bitmap bitmap = null;
         try {
@@ -139,16 +159,19 @@ public class FetchThumbnailsWebService implements Observer {
         }
         catch (IOException e) {
             e.printStackTrace();
+            passError();
         }
         PexelsImage imageObject = (PexelsImage) this.searchResult.getListPexelsElement().get(this.currentPexelElement);
         imageObject.setThumbnailBitmap(bitmap);
         this.currentPexelElement++;
     }
+
     @Override
     public void onError(@NonNull Throwable e) {
         e.printStackTrace();
         passError();
     }
+
     @Override
     public void onComplete() {
         returnSearchResult();
