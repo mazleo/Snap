@@ -3,17 +3,14 @@ package io.github.mazleo.snap.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import io.github.mazleo.snap.R;
@@ -37,50 +34,26 @@ public class ViewImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_image);
 
-        pexelsImage = getIntent().getParcelableExtra("PEXELS_IMAGE");
-        imageView = findViewById(R.id.view_image_activity_imageview);
-        backButton = findViewById(R.id.view_image_activity_back_button);
-        infoButton = findViewById(R.id.view_image_activity_information_button);
-        progressBar = findViewById(R.id.view_image_activity_progress_bar);
-        activity = this;
-        infoDialog = ImageInfoDialogFragment.newInstance(pexelsImage);
+        initializeFields();
+        updateImageUIOnChange();
+        updateProgressUIOnChange();
+        indicateErrorOnError();
+        cleanUpOnBackButtonClick();
+        showInfoOnInfoButtonClick();
 
-        imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
+        this.imageViewModel.downloadImage(pexelsImage, activity);
+    }
 
-        this.imageViewModel.getImageLiveData().observe(this,
-                pImage -> {
-                    if (pImage != null) {
-                        pexelsImage = pImage;
-                        Bitmap image = pImage.getImageBitmap();
-                        if (image != null) {
-                            imageView.setImageBitmap(image);
-                        }
-//                        Log.i("APPDEBUG", "ID: " + pImage.getId());
-//                        Log.i("APPDEBUG", "NAME: " + pImage.getPhotographerName());
-                    }
-                }
-        );
+    private void showInfoOnInfoButtonClick() {
+        this.infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                infoDialog.show(getSupportFragmentManager(), "info-dialog");
+            }
+        });
+    }
 
-        this.imageViewModel.getProgressLiveData().observe(this,
-                progress -> {
-                    if (progress) {
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                }
-        );
-
-        this.imageViewModel.getErrorLiveData().observe(this,
-                error -> {
-                    if (error) {
-                        Toast.makeText(activity, "An error has occured while downloading the image", Toast.LENGTH_LONG).show();
-                        activity.finish();
-                    }
-                }
-        );
-
+    private void cleanUpOnBackButtonClick() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,15 +64,59 @@ public class ViewImageActivity extends AppCompatActivity {
                 activity.finish();
             }
         });
+    }
 
-        this.infoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                infoDialog.show(getSupportFragmentManager(), "info-dialog");
-            }
-        });
+    private void indicateErrorOnError() {
+        this.imageViewModel.getErrorLiveData().observe(this,
+                error -> {
+                    if (error) {
+                        Toast.makeText(activity, "An error has occured while downloading the image", Toast.LENGTH_LONG).show();
+                        activity.finish();
+                    }
+                }
+        );
+    }
 
-        this.imageViewModel.downloadImage(pexelsImage, activity);
+    private void updateProgressUIOnChange() {
+        this.imageViewModel.getProgressLiveData().observe(this,
+                progress -> {
+                    if (progress) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+        );
+    }
+
+    private void updateImageUIOnChange() {
+        this.imageViewModel.getImageLiveData().observe(this,
+                pImage -> {
+                    if (pImage != null) {
+                        setImageInUI(pImage);
+                    }
+                }
+        );
+    }
+
+    private void setImageInUI(PexelsImage pImage) {
+        pexelsImage = pImage;
+        Bitmap image = pImage.getImageBitmap();
+        if (image != null) {
+            imageView.setImageBitmap(image);
+        }
+    }
+
+    private void initializeFields() {
+        pexelsImage = getIntent().getParcelableExtra("PEXELS_IMAGE");
+        imageView = findViewById(R.id.view_image_activity_imageview);
+        backButton = findViewById(R.id.view_image_activity_back_button);
+        infoButton = findViewById(R.id.view_image_activity_information_button);
+        progressBar = findViewById(R.id.view_image_activity_progress_bar);
+        activity = this;
+        infoDialog = ImageInfoDialogFragment.newInstance(pexelsImage);
+        imageViewModel = new ViewModelProvider(this).get(ImageViewModel.class);
     }
 
     @Override
