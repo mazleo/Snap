@@ -1,7 +1,6 @@
 package io.github.mazleo.snap.controllers;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
