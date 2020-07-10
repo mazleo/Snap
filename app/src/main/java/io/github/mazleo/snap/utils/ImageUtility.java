@@ -28,6 +28,7 @@ public class ImageUtility {
 
         return thumbnailSize;
     }
+
     public static int calcImageWidth(Activity activity, PexelsImage pexelsImage) {
         int sizeBase = calcImageBase(activity, pexelsImage);
         int imageWidth = pexelsImage.getWidth();
@@ -49,6 +50,7 @@ public class ImageUtility {
 
         return 0;
     }
+
     public static int calcImageHeight(Activity activity, PexelsImage pexelsImage) {
         int sizeBase = calcImageBase(activity, pexelsImage);
         int imageWidth = pexelsImage.getWidth();
@@ -70,6 +72,7 @@ public class ImageUtility {
 
         return 0;
     }
+
     public static int calcImageBase(Activity activity, PexelsImage pexelsImage) {
         float imageAspectRatio = calcImageAspectRatio(pexelsImage.getWidth(), pexelsImage.getHeight());
         float screenAspectRatio = WindowUtility.calcScreenAspectRatio(activity);
@@ -84,6 +87,7 @@ public class ImageUtility {
             return IMAGE_HEIGHT_BASE;
         }
     }
+
     public static float calcImageAspectRatio(float width, float height) {
         return width / height;
     }
