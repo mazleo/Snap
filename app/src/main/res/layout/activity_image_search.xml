@@ -22,7 +22,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:contentDescription="@string/app_logo_description"
-            android:src="@drawable/logo_circle"
+            android:src="@drawable/logo_circle_150x150"
             android:transitionName="animated_logo" />
 
         <SearchView
