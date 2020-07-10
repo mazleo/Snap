@@ -34,19 +34,9 @@ public class FetchImageWebService implements Observer {
     public void retrieveImage(PexelsImage pexelsImage, Activity activity) {
         this.pexelsImage = pexelsImage;
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .callTimeout(10, TimeUnit.SECONDS)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SearchInfo.PEXELS_PHOTOS_BASE_URL)
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build();
-
+        OkHttpClient okHttpClient = buildOkHttpClientWithCustomTimeout();
+        Retrofit retrofit = buildRetrofitWithRxJava(okHttpClient);
         ImageService imageService = retrofit.create(ImageService.class);
-
         Observable<ResponseBody> observable = imageService.fetchMediaBytes(
                 pexelsImage.getImageUrl(),
                 ImageUtility.calcImageWidth(activity, pexelsImage),
@@ -58,6 +48,23 @@ public class FetchImageWebService implements Observer {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
+    }
+
+    private OkHttpClient buildOkHttpClientWithCustomTimeout() {
+        return new OkHttpClient.Builder()
+                .callTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .build();
+    }
+
+    private Retrofit buildRetrofitWithRxJava(OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
+                .baseUrl(SearchInfo.PEXELS_PHOTOS_BASE_URL)
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .client(okHttpClient)
+                .build();
     }
 
     private void returnImage(PexelsImage pexelsImage) {
