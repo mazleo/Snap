@@ -14,13 +14,26 @@ public class SearchState {
         this.resultsPerPage = 0;
         this.searchType = 0;
     }
+
     public SearchState(int totalResults) {
         this();
         this.totalResults = totalResults;
     }
+
     public SearchState(int totalResults, int openPages) {
         this(totalResults);
         this.openPages = openPages;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return
+                "[total_result: " + this.totalResults
+                        + ", open_pages: " + this.openPages
+                        + ", results_per_page: " + this.resultsPerPage
+                        + ", search_type: " + this.searchType
+                        + "]";
     }
 
     public int getTotalResults() {
@@ -53,16 +66,5 @@ public class SearchState {
 
     public void setSearchType(int searchType) {
         this.searchType = searchType;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return
-                "[total_result: " + this.totalResults
-                + ", open_pages: " + this.openPages
-                + ", results_per_page: " + this.resultsPerPage
-                + ", search_type: " + this.searchType
-                + "]";
     }
 }
