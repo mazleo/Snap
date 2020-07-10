@@ -20,6 +20,10 @@ public class ImageInfoDialogFragment extends DialogFragment {
     private TextView photographerIdTextView;
     private TextView resolutionTextView;
 
+    public ImageInfoDialogFragment() {
+        super();
+    }
+
     public ImageInfoDialogFragment(PexelsImage pexelsImage) {
         super();
         this.pexelsImage = pexelsImage;
@@ -44,10 +48,12 @@ public class ImageInfoDialogFragment extends DialogFragment {
     }
 
     private void populateFields() {
-        photoIdTextView.setText(getString(R.string.label_photo_id, pexelsImage.getId()));
-        photographerNameTextView.setText(getString(R.string.label_photographer_name, pexelsImage.getPhotographerName()));
-        photographerIdTextView.setText(getString(R.string.label_photographer_id, pexelsImage.getPhotographerId()));
-        resolutionTextView.setText(getString(R.string.label_resolution, pexelsImage.getWidth(), pexelsImage.getHeight()));
+        if (pexelsImage != null) {
+            photoIdTextView.setText(getString(R.string.label_photo_id, pexelsImage.getId()));
+            photographerNameTextView.setText(getString(R.string.label_photographer_name, pexelsImage.getPhotographerName()));
+            photographerIdTextView.setText(getString(R.string.label_photographer_id, pexelsImage.getPhotographerId()));
+            resolutionTextView.setText(getString(R.string.label_resolution, pexelsImage.getWidth(), pexelsImage.getHeight()));
+        }
     }
 
     private void initializeFields(View infoView) {
